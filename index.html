@@ -5,9 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuckGPT Chat</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</script>
+  
 </head>
 <body>
-    <div id="intro-cards-container" class="intro-cards">
+    <div id="popup-overlay" class="hidden">
+        <div id="popup-content">
+            <span id="close-popup">&times;</span>
+            <p>Are you sure you want to clear the current chat and start a new one?</p>
+            <button id="yes-button">Yes</button>
+            <button id="no-button">No</button>
+        </div>
+    </div>
+<div id="intro-cards-container" class="intro-cards">
         <div class="intro-card card-1">
             <img src="assets/source.png" alt="Open Source Icon">
             <p>This GUI is an open-source project for DuckGPT.</p>
@@ -22,23 +34,26 @@
         </div>
     </div>
     <div class="chat-container">
+        <div id="chat-box" class="chat-box"><div class="message-container" id="spaceChatBox"></div></div>
         <div class="header">
             <button id="new-chat-button">
                 <img src="assets/new.png" alt="New Chat">
             </button>
+            
         </div>
-        <div id="chat-box" class="chat-box"></div>
-
         <div class="input-container">
-            <input type="text" id="chat-input" placeholder="Type your message here..." autofocus>
+            <div id="chat-input" class="editable-div" contenteditable="true" role="textbox" aria-multiline="true"></div>
+            <div id="placeholder">Type your message here...</div>
+            <!-- <input type="text" id="chat-input" placeholder="Type your message here..." autofocus> -->
             <button id="send-button">
                 <img src="assets/arrow.png" alt="Send">
             </button>
         </div>
     </div>
-    <div id="particles-js"></div>
-    <script src="scripts/script.js"></script>
+    <div id="particles-js disabled"></div>
 
+    <script type="module" src="scripts/script.js"></script>
+    
     <script src="particles/particles.js"></script>
     <script src="particles/js/app.js"></script>
     <script src="particles/js/lib/stats.js"></script>

@@ -18,17 +18,20 @@ body, html {
     justify-content: center;
     align-items: center;
     font-family: 'Poppins', sans-serif; 
-    color: #ffffff;
+    color: #e1e1e1;
+    background: linear-gradient(135deg, #2b2b2b, #121212);
 }
 
+p {
+    margin: 0;
+}
 
 #particles-js {
     display: block;
     position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 100vh; 
     z-index: -1;
-    background: linear-gradient(135deg, #2b2b2b, #121212);
 }
 
 canvas {
@@ -46,7 +49,7 @@ canvas {
     align-items: center;
     gap: 15px;
     text-align: center;
-    z-index: 1000;
+    z-index: 11;
 }
 
 .intro-card {
@@ -56,7 +59,7 @@ canvas {
     background: rgba(255, 255, 255, 0.15); 
     backdrop-filter: blur(3px);
     border-radius: 15px;
-    color: white;
+    color: e1e1e1;
     font-size: 12px;
     display: flex;
     flex-direction: column;
@@ -91,30 +94,15 @@ canvas {
 
 
 .card-1 {
-    background-color: rgba(135, 206, 235, 0.2); 
+    background-color: rgba(135, 140, 150, 0.2); 
 }
 
 .card-2 {
-    background-color: rgba(144, 238, 144, 0.2); 
+    background-color: rgba(144, 166, 144, 0.2); 
 }
 
 .card-3 {
-    background-color: rgba(255, 182, 193, 0.2); 
-}
-
-.hidden {
-    display: none;
-}
-
-
-.chat-container {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
+    background-color: rgba(205, 182, 193, 0.2); 
 }
 
 
@@ -122,6 +110,8 @@ canvas {
     padding: 10px;
     display: flex;
     justify-content: flex-start;
+    position: fixed ;
+    z-index: 10;
 }
 
 #new-chat-button {
@@ -138,6 +128,67 @@ canvas {
     height: 24px;
 }
 
+
+#popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+#popup-content {
+    background: #2b2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    width: 300px;
+    text-align: center;
+}
+
+#close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#popup-content > button {
+    margin: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#yes-button {
+    background-color: #1e1e1e;
+    color: #e1e1e1;
+}
+
+#no-button {
+    background-color: #1e1e1e;
+    color: #e1e1e1;
+}
+
+
+.chat-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
 .chat-box {
     flex-grow: 1;
     overflow-y: auto;
@@ -146,28 +197,28 @@ canvas {
     flex-direction: column-reverse;
 }
 
+#spaceChatBox {
+    margin-bottom: 20vh;
+}
+
 .message-container {
     display: flex;
     align-items: flex-start;
     margin-bottom: 10px;
 }
 
-.message-card:hover {
-    transform: translateY(-5px);
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
-}
-
 .message-container.user {
     align-self: flex-end;
+    max-width: 70%;
 }
 
 .message-card {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(3px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* box-shadow: #121212 ; */
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 10px;
     animation: slideUp 0.5s ease-out;
     word-wrap: break-word;
@@ -175,17 +226,17 @@ canvas {
 
 .message-card.user {
     align-self: flex-end;
-    background: rgba(0, 150, 136, 0.2);
-    max-width: 70%;
+    /* background: rgba(0, 150, 136, 0.2); */
 }
 
 
 .message-card.api {
     align-self: flex-start;
-    background: rgba(100, 100, 255, 0.2);
+    background: rgba(100, 100, 255, 0);
 }
 
 .profile-pic {
+    min-width: 40px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -194,19 +245,62 @@ canvas {
     background-position: center;
     margin-right: 10px;
 }
+pre {
+    margin: 20px 10px;
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+    border-radius: 5px;
+}
+
+code {
+    font-family: "Courier New", Courier, monospace;
+    background-color: #2b2b2b;
+}
+
+pre > code {
+    padding: 20px;
+    display: block;
+    background-color: none;
+}
+
+.code-header {
+    background-color: #292929;
+    color: #e1e1e1;
+    padding: 5px 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.code-header span {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.code-header button {
+    background-color: transparent;
+    color: e1e1e1;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #e1e1e1;
+}
 
 
 .input-container {
+    /* height:; */
     width: 60%;
     display: flex;
     align-self: center;
-    padding: 10px;
+    padding-bottom: 10px;
+    position: relative;
     /* background: rgba(50, 50, 50, 0.8); */
 }
 
 #chat-input {
     flex-grow: 1;
     padding: 10px;
+    padding-left: 20px;
     border-radius: 20px;
     border: none;
     outline: none;
@@ -214,6 +308,18 @@ canvas {
     backdrop-filter: blur(3px);
     color: white;
 }
+
+
+#placeholder {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    color: #aaa;
+    pointer-events: none;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: opacity 0.2s;
+  }
 
 #send-button {
     background: none;
@@ -228,6 +334,11 @@ canvas {
     width: 24px;
     height: 24px;
     
+}
+
+
+.hidden {
+    display: none !important;
 }
 
 @keyframes slideUp {

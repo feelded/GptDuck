@@ -8,6 +8,11 @@
 /* ----------------------------------------------- */
 
 var pJS = function(tag_id, params){
+  
+  // const particleDiv = document.getElementById("particles-js");
+  // if (particleDiv.classList.contain("disabled")) {
+  //   exit(0)
+  // }
 
   var canvas_el = document.querySelector('#'+tag_id+' > .particles-js-canvas-el');
 
