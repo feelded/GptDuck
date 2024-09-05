@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuckGPT Chat</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="intro-cards-container" class="intro-cards">
+        <div class="intro-card card-1">
+            <img src="assets/source.png" alt="Open Source Icon">
+            <p>This GUI is an open-source project for DuckGPT.</p>
+        </div>
+        <div class="intro-card card-2">
+            <img src="assets/help.png" alt="Help Icon">
+            <p>Click the "New Chat" button or type a message below to start.</p>
+        </div>
+        <div class="intro-card card-3">
+            <img src="assets/developer.png" alt="Developer Icon">
+            <p>Created by [Your Name]. Visit my GitHub for details.</p>
+        </div>
+    </div>
+    <div class="chat-container">
+        <div class="header">
+            <button id="new-chat-button">
+                <img src="assets/new.png" alt="New Chat">
+            </button>
+        </div>
+        <div id="chat-box" class="chat-box"></div>
+
+        <div class="input-container">
+            <input type="text" id="chat-input" placeholder="Type your message here..." autofocus>
+            <button id="send-button">
+                <img src="assets/arrow.png" alt="Send">
+            </button>
+        </div>
+    </div>
+    <div id="particles-js"></div>
+    <script src="scripts/script.js"></script>
+
+    <script src="particles/particles.js"></script>
+    <script src="particles/js/app.js"></script>
+    <script src="particles/js/lib/stats.js"></script>
+</body>
+</html>

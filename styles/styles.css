@@ -1,0 +1,252 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    /* margin: 0;
+    padding: 0;
+    box-sizing: border-box; */
+    font-family: 'Poppins', sans-serif; 
+    /* border: 0.5px solid black; */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif; 
+    color: #ffffff;
+}
+
+
+#particles-js {
+    display: block;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #2b2b2b, #121212);
+}
+
+canvas {
+    display: block;
+    /* vertical-align: bottom; */
+}
+
+.intro-cards {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.intro-card {
+    width: 120px;
+    height: 120px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(3px);
+    border-radius: 15px;
+    color: white;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.intro-card img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 10px; 
+}
+
+.intro-card p {
+    margin: 0;
+    font-size: 10px; /* Smaller font size */
+}
+
+.intro-card:hover {
+    transform: translateY(-5px);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+
+.card-1 {
+    background-color: rgba(135, 206, 235, 0.2); 
+}
+
+.card-2 {
+    background-color: rgba(144, 238, 144, 0.2); 
+}
+
+.card-3 {
+    background-color: rgba(255, 182, 193, 0.2); 
+}
+
+.hidden {
+    display: none;
+}
+
+
+.chat-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.header {
+    padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#new-chat-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+#new-chat-button img {
+    width: 24px;
+    height: 24px;
+}
+
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 10%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.message-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.message-card:hover {
+    transform: translateY(-5px);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+.message-container.user {
+    align-self: flex-end;
+}
+
+.message-card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    animation: slideUp 0.5s ease-out;
+    word-wrap: break-word;
+}
+
+.message-card.user {
+    align-self: flex-end;
+    background: rgba(0, 150, 136, 0.2);
+    max-width: 70%;
+}
+
+
+.message-card.api {
+    align-self: flex-start;
+    background: rgba(100, 100, 255, 0.2);
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-image: url('../assets/photo.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+}
+
+
+.input-container {
+    width: 60%;
+    display: flex;
+    align-self: center;
+    padding: 10px;
+    /* background: rgba(50, 50, 50, 0.8); */
+}
+
+#chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(3px);
+    color: white;
+}
+
+#send-button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 10px;
+}
+
+#send-button img {
+    width: 24px;
+    height: 24px;
+    
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        height: 90%;
+    }
+}
