@@ -9,20 +9,50 @@ const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
 const placeholder = document.getElementById("placeholder");
 const sendButton = document.getElementById("send-button");
+const dailog = document.getElementById('dailog');
 const newChatButton = document.getElementById("new-chat-button");
+const settingButton = document.getElementById("setting-button");
+const particlesToggle = document.getElementById('particles-toggle');
+const themeToggle = document.getElementById('theme-toggle');
 const introCardsContainer = document.getElementById("intro-cards-container");
-
+const particlejs = document.getElementById('particles-js');
 
 document.addEventListener("DOMContentLoaded", () => {
   loadMessages();
 
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
-  if (history.length > 0) {
-    hideIntroCards();
+  if (history.length == 0) {
+    introCardsContainer.classList.remove("hidden");
+  }
+  chatBox.scrollTo({
+    top: chatBox.scrollHeight,
+    behavior: 'smooth'
+  });
+
+  const link = document.createElement('link');
+  link.href = 'styles/styles.css';
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
+
+  let settings = localStorage.getItem("setting")
+  if (settings === null) {
+    localStorage.setItem("setting", JSON.stringify({ "particle": true, "light": false }));
+  };
+  settings = localStorage.getItem("setting")
+  const particles = JSON.parse(settings)['particle'];
+  const light = JSON.parse(settings)['light']
+
+  if (light) {
+    themeToggle.checked = true;
+    applyLightTheme()
+  }
+  if (particles) {
+    particlesToggle.checked = true;
+    addParticles("#particles-js")
   }
 });
 
-sendButton.addEventListener("click", () => {sendMessage();chatInput.innerText = "";updatePlaceholder()});
+sendButton.addEventListener("click", () => { sendMessage(); chatInput.innerText = ""; updatePlaceholder() });
 
 chatInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && event.ctrlKey) {
@@ -37,18 +67,26 @@ chatInput.addEventListener('blur', updatePlaceholder);
 
 newChatButton.addEventListener("click", () => {
   document.getElementById('popup-overlay').classList.remove('hidden');
-  
+  document.getElementById('clearchat-popup').classList.remove('hidden');
 });
 
-document.getElementById('close-popup').addEventListener('click', function() {
+settingButton.addEventListener("click", () => {
+  document.getElementById('popup-overlay').classList.remove('hidden');
+  document.getElementById('setting-popup').classList.remove('hidden');
+});
+
+document.getElementById('close-popup').addEventListener('click', function () {
   document.getElementById('popup-overlay').classList.add('hidden');
+  document.getElementById('clearchat-popup').classList.add('hidden');
+  document.getElementById('setting-popup').classList.add('hidden');
 });
 
-document.getElementById('no-button').addEventListener('click', function() {
+document.getElementById('no-button').addEventListener('click', function () {
   document.getElementById('popup-overlay').classList.add('hidden');
+  document.getElementById('clearchat-popup').classList.add('hidden');
 });
 
-document.getElementById('yes-button').addEventListener('click', function() {
+document.getElementById('yes-button').addEventListener('click', function () {
   sessionStorage.clear();
   chatBox.innerHTML = "";
   updatePlaceholder();
@@ -56,19 +94,91 @@ document.getElementById('yes-button').addEventListener('click', function() {
   document.getElementById('popup-overlay').classList.add('hidden');
 });
 
+// Toggle Particle Effects
+particlesToggle.addEventListener('change', function () {
+  if (this.checked) {
+    const settings = JSON.parse(localStorage.getItem('setting'))
+    settings['particle'] = true
+    localStorage.setItem('setting', JSON.stringify(settings));
+    console.log('particles');
+  } else {
+    const settings = JSON.parse(localStorage.getItem('setting'))
+    settings['particle'] = false
+    localStorage.setItem('setting', JSON.stringify(settings));
+    particlejs.innerHTML = ''
+  }
+});
+
+themeToggle.addEventListener('change', function () {
+  if (this.checked) {
+    const settings = JSON.parse(localStorage.getItem('setting'))
+    settings['light'] = true
+    localStorage.setItem('setting', JSON.stringify(settings));
+    applyLightTheme();
+  } else {
+    const settings = JSON.parse(localStorage.getItem('setting'))
+    settings['light'] = false
+    localStorage.setItem('setting', JSON.stringify(settings));
+    applyDarkTheme();
+  }
+});
+
+
+document.querySelectorAll('.iconImg').forEach(icon => {
+  icon.addEventListener('mousemove', (event) => {
+    const dailogText = icon.getAttribute('alt');
+    const cords = icon.getBoundingClientRect();
+    const dSize = dailog.getBoundingClientRect();
+    dailog.textContent = dailogText;
+
+    dailog.style.opacity = '0.4';
+    dailog.style.visibility = 'visible';
+    if (icon.alt != "Settings") {dailog.style.left = cords.right + 'px';}
+    else {dailog.style.left = cords.left-dSize.width + 'px';}
+    dailog.style.top = cords.bottom + 'px';
+  });
+
+  icon.addEventListener('mouseleave', () => {
+    dailog.style.opacity = '0';
+    dailog.style.visibility = 'hidden';
+  });
+});
+
+function addParticles(element, cColor, lColor){
+  document.querySelector(element).innerHtml = ''
+  particlesJS(element, {'particles': 
+    {'color': {'value': cColor}},
+    
+    'line_linked': {'color': lColor,}
+  })}
+
+function applyLightTheme() {
+  const link = document.createElement('link');
+  link.href = 'styles/light.css'; 
+  link.rel = 'stylesheet';
+  link.id = 'lightThemeCss';
+  document.head.appendChild(link);
+}
+
+function applyDarkTheme() {
+  const link = document.getElementById('lightThemeCss');
+  if (link) {
+    link.remove();
+  }
+}
 
 function updatePlaceholder() {
-if (chatInput.innerText.trim() === '') {
-  placeholder.style.opacity = '1';
-} else {
-  placeholder.style.opacity = '0';
-}
+  if (chatInput.innerText.trim() === '') {
+    placeholder.style.opacity = '1';
+  } else {
+    placeholder.style.opacity = '0';
+  }
 }
 
 async function renderMarkdown(content) {
   try {
-    const htmlContent = marked(content);
-    return htmlContent;
+    const htmlContent = marked(content.replace(/\\\(/g, '=$=').replace(/\\\[/g, '=#=').replace(/\\\)/g, '$=$').replace(/\\\]/g, '#=#'));
+    return htmlContent.replace(/=\$=/g, '\\(').replace(/=#=/g, '\\[').replace(/\$=\$/g, '\\)').replace(/#=#/g, '\\]');
   } catch (error) {
     console.error("Error fetching markdown:", error);
     return content;
@@ -98,7 +208,7 @@ function enhanceCodeBlocks(element) {
         copyButton.textContent = "📋 Copy";
       }, 2000);
     });
-    // Prism.highlightElement(block);
+    Prism.highlightElement(pre.querySelector("code"));
   });
   return element
 }
@@ -127,7 +237,6 @@ function hideIntroCards() {
 async function addMessageToChatBox(content, role) {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message-container");
-
   const messageCard = document.createElement("div");
   messageCard.classList.add("message-card", role);
   if (role === "api") {
@@ -140,15 +249,15 @@ async function addMessageToChatBox(content, role) {
     messageContainer.classList.add("user");
     messageCard.innerText = content;
   }
-MathJax.typesetPromise([messageCard]).then(function() {
-    console.log('MathJax finished typesetting');
-}).catch(function(err) {
-    console.error('MathJax typesetting error:', err);
-});
   messageContainer.appendChild(messageCard);
   chatBox.insertBefore(enhanceCodeBlocks(messageContainer), chatBox.firstChild);
+  await MathJax.typesetPromise(['.message-card'])
 
-  
+  chatBox.scrollTo({
+    top: chatBox.scrollHeight,
+    behavior: 'smooth'
+  });
+
 }
 
 function loadingResponse() {
@@ -165,13 +274,15 @@ function loadingResponse() {
 
 async function sendMessage() {
   const prompt = chatInput.innerText.trim();
-  console.log(prompt)
-  if (!prompt) return;
+  if (!prompt) {
+    return
+  };
 
   await addMessageToChatBox(prompt, "user");
-  chatInput.value = "";
 
+  chatInput.value = "";
   hideIntroCards();
+
   const loading = loadingResponse();
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
   const model = "gpt-4o-mini";

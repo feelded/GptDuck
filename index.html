@@ -1,61 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DuckGPT Chat</title>
-    <link rel="stylesheet" href="styles/styles.css">
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
 
-</script>
-  
-</head>
-<body>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  </head>
+  <body>
+    <div id="dailog" class="dailog"></div>
+    <div class="header" id="nHead">
+        <button id="new-chat-button">
+            <img class="iconImg" src="assets/clear.png" alt="clear Chat" />
+        </button>
+    </div>
+    <div class="header" id="sHead">
+        <button id="setting-button">
+            <img class="iconImg" src="assets/setting.png" alt="Settings" />
+        </button>
+    </div>
     <div id="popup-overlay" class="hidden">
-        <div id="popup-content">
-            <span id="close-popup">&times;</span>
-            <p>Are you sure you want to clear the current chat and start a new one?</p>
+      <div id="popup-content">
+        <span id="close-popup">&times;</span>
+        <div id="clearchat-popup" class="hidden">
+            <p>
+              Are you sure you want to clear the current chat and start a new one?
+            </p>
             <button id="yes-button">Yes</button>
             <button id="no-button">No</button>
         </div>
+        <div id="setting-popup" class="hidden">
+          <div class="setting-option">
+            <label for="particles-toggle">Particle Effects</label>
+            <label class="switch">
+              <input type="checkbox" id="particles-toggle"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+  
+          <div class="setting-option">
+            <label for="theme-toggle">Light Theme</label>
+            <label class="switch">
+              <input type="checkbox" id="theme-toggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
-<div id="intro-cards-container" class="intro-cards">
-        <div class="intro-card card-1">
-            <img src="assets/source.png" alt="Open Source Icon">
-            <p>This GUI is an open-source project for DuckGPT.</p>
-        </div>
-        <div class="intro-card card-2">
-            <img src="assets/help.png" alt="Help Icon">
-            <p>Click the "New Chat" button or type a message below to start.</p>
-        </div>
-        <div class="intro-card card-3">
-            <img src="assets/developer.png" alt="Developer Icon">
-            <p>Created by [Your Name]. Visit my GitHub for details.</p>
-        </div>
+
+    <div id="intro-cards-container" class="intro-cards hidden">
+      <div class="intro-card card-1">
+        <img src="assets/source.png" alt="Open Source Icon" />
+        <p>This GUI is an open-source project for DuckGPT.</p>
+      </div>
+      <div class="intro-card card-2">
+        <img src="assets/help.png" alt="Help Icon" />
+        <p>Click the "New Chat" button or type a message below to start.</p>
+      </div>
+      <div class="intro-card card-3">
+        <img src="assets/developer.png" alt="Developer Icon" />
+        <p>Created by [Your Name]. Visit my GitHub for details.</p>
+      </div>
     </div>
     <div class="chat-container">
-        <div id="chat-box" class="chat-box"><div class="message-container" id="spaceChatBox"></div></div>
-        <div class="header">
-            <button id="new-chat-button">
-                <img src="assets/new.png" alt="New Chat">
-            </button>
-            
-        </div>
-        <div class="input-container">
-            <div id="chat-input" class="editable-div" contenteditable="true" role="textbox" aria-multiline="true"></div>
-            <div id="placeholder">Type your message here...</div>
-            <!-- <input type="text" id="chat-input" placeholder="Type your message here..." autofocus> -->
-            <button id="send-button">
-                <img src="assets/arrow.png" alt="Send">
-            </button>
-        </div>
+      <div id="chat-box" class="chat-box">
+        <div class="message-container" id="spaceChatBox"></div>
+      </div>
+      
+      <div class="input-container">
+        <div
+          id="chat-input"
+          class="editable-div"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+        ></div>
+        <div id="placeholder">Type your message here...</div>
+        <!-- <input type="text" id="chat-input" placeholder="Type your message here..." autofocus> -->
+        <button id="send-button">
+          <img class="iconImg" src="assets/send.png" alt="Send" />
+        </button>
+      </div>
     </div>
-    <div id="particles-js disabled"></div>
+    <div id="particles-js"></div>
 
     <script type="module" src="scripts/script.js"></script>
-    
-    <script src="particles/particles.js"></script>
-    <script src="particles/js/app.js"></script>
-    <script src="particles/js/lib/stats.js"></script>
-</body>
+    <script type="module" src="scripts/particles.js"></script>
+  </body>
 </html>
