@@ -1,5 +1,6 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.cdnfonts.com/css/sf-mono');
 
 :root {
     --lWhite: #e1e1e1;
@@ -28,8 +29,19 @@ body, html {
     background: linear-gradient(135deg, #2b2b2b, #121212);
 }
 
+
+#loader {
+    display: none;
+}
+
 p {
     margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #f7a840;
+    cursor: pointer;
 }
 
 #particles-js {
@@ -37,7 +49,7 @@ p {
     position: fixed;
     width: 100vw;
     height: 100vh; 
-    z-index: -1;
+    z-index: 1;
 }
 
 canvas {
@@ -56,14 +68,13 @@ canvas {
     flex-wrap: wrap;
     gap: 15px;
     text-align: center;
-    z-index: 11;
+    z-index: 4;
 }
 
 .intro-card {
     width: 120px;
     height: 120px;
     padding: 10px;
-    backdrop-filter: blur(3px);
     border-radius: 15px;
     color: var(--lWhite);
     font-size: 12px;
@@ -77,8 +88,8 @@ canvas {
     text-align: center;
     background: rgba(255, 255, 255, 0.15); 
     border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(3px);
 }
 
@@ -95,8 +106,7 @@ canvas {
 
 .intro-card:hover {
     transform: translateY(-5px);
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
+    backdrop-filter: blur(9=4px);
 }
 
 
@@ -118,7 +128,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     position: fixed ;
-    z-index: 10;
+    z-index: 6;
     top: 0;
 }
 
@@ -157,7 +167,7 @@ canvas {
     white-space: nowrap;
     pointer-events: none; 
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 100;
+    z-index: 7;
 }
 
 #popup-overlay {
@@ -165,7 +175,7 @@ canvas {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 10;
     width: 100%;
     height: 100%;
     display: flex;
@@ -291,6 +301,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: flex-start;
     margin-bottom: 10px;
+    z-index: 3;
 }
 
 .message-container.user {
@@ -302,12 +313,11 @@ input:checked + .slider:before {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(3px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    /* box-shadow: #121212 ; */
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 10px;
     animation: slideUp 0.5s ease-out;
-    word-wrap: break-word;
+    /* word-wrap: break-word; */
 }
 
 .message-card.user {
@@ -330,6 +340,7 @@ input:checked + .slider:before {
     background-size: cover;
     background-position: center;
     margin-right: 10px;
+    opacity: 1;
 }
 
 pre {
@@ -343,8 +354,8 @@ pre {
 code {
     background-color: #2b2b2b;
     font-family: "Courier New", Courier, monospace !important;
-    font-size: 1rem;
-    line-height: 1.2 !important;
+    font-size: 0.8rem;
+    line-height: 1.75 !important;
 }
 
 pre > code {
@@ -394,19 +405,69 @@ pre > code * {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: #6a9955 !important; /* Your custom color for comments */
+    color: #6272a4; /* Soft blue-gray for comments */
+    font-style: italic;
 }
 
 .token.punctuation {
-    color: #f5f5f5 !important; /* Custom color for punctuation */
+    color: #f8f8f2; /* Normal white */
 }
 
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #ff5555; /* Vibrant red */
+}
+
+.token.boolean,
+.token.number {
+    color: #bd93f9; /* Light purple */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #50fa7b; /* Bright green */
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.token.variable {
+    color: #f1fa8c; /* Bright yellow */
+}
+
+.token.atrule,
 .token.keyword {
-    color: #569cd6 !important; /* Custom color for keywords */
+    color: #ff79c6; /* Pink */
 }
 
-.token.string {
-    color: #ce9178 !important; /* Custom color for strings */
+.token.function,
+.token.class-name {
+    color: #8be9fd; /* Cyan */
+}
+
+.token.regex,
+.token.important {
+    color: #ffb86c; /* Orange */
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
 }
 
 .input-container {
@@ -416,6 +477,7 @@ pre > code * {
     align-self: center;
     padding-bottom: 10px;
     position: relative;
+    z-index: 6;
     /* background: rgba(50, 50, 50, 0.8); */
 }
 
@@ -448,13 +510,14 @@ pre > code * {
     border: none;
     outline: none;
     cursor: pointer;
-    margin-left: 10px;
     padding: 10px;
+    display: flex;
 }
 
 #send-button img {
     width: 24px;
     height: 24px;
+    align-self: flex-end;
     
 }
 
@@ -480,18 +543,18 @@ pre > code * {
 
 @media (max-width: 768px) {
     .intro-cards{
-        width: 100%;
+        width: 90%;
     }
     .chat-box {
         padding: 0 2%;
     }
     .message-card{
         overflow-wrap: break-word;
-        word-break: break-all;
+        /* word-break: break-all; */
     }
     .input-container {
         width: 100%;
-        padding-bottom: 0;
+        padding-bottom: 1px;
     }
     #chat-input {
         overflow-wrap: break-word;
@@ -505,6 +568,21 @@ pre > code * {
 
 @media (max-width:477px) {
     .input-container {
-        width: 100%;
+        width: 95%;
+    }
+
+    .intro-card {
+        width: 90px;
+        height: 90px;
+        padding: 15px;
+    }
+
+    .intro-card img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .intro-card p {
+        font-size: px;
     }
 }

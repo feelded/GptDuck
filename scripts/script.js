@@ -1,8 +1,11 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@5.1.0/lib/marked.esm.js";
+
 marked.setOptions({
   mangle: false,
   headerIds: false,
 });
+
+console.log(window.navigator.platform)
 
 const apiUrl = "https://duckgpt.iriszarox.workers.dev/chat/";
 const chatBox = document.getElementById("chat-box");
@@ -16,6 +19,7 @@ const particlesToggle = document.getElementById('particles-toggle');
 const themeToggle = document.getElementById('theme-toggle');
 const introCardsContainer = document.getElementById("intro-cards-container");
 const particlejs = document.getElementById('particles-js');
+const lightParticles = {"particles": {"color": {"value": "#87CEEB"},"line_linked": {"color": "#000000",},}}
 
 document.addEventListener("DOMContentLoaded", () => {
   loadMessages();
@@ -29,35 +33,58 @@ document.addEventListener("DOMContentLoaded", () => {
     behavior: 'smooth'
   });
 
-  const link = document.createElement('link');
-  link.href = 'styles/styles.css';
-  link.rel = 'stylesheet';
-  document.head.appendChild(link);
-
   let settings = localStorage.getItem("setting")
   if (settings === null) {
     localStorage.setItem("setting", JSON.stringify({ "particle": true, "light": false }));
   };
-  settings = localStorage.getItem("setting")
-  const particles = JSON.parse(settings)['particle'];
-  const light = JSON.parse(settings)['light']
+  settings = JSON.parse(localStorage.getItem("setting"))
+  const particles = settings['particle'];
+  const light = settings['light']
 
   if (light) {
     themeToggle.checked = true;
     applyLightTheme()
+    if (particles) {
+      particlesToggle.checked = true;
+      addParticles("#particles-js", lightParticles)
+    }
   }
-  if (particles) {
-    particlesToggle.checked = true;
-    addParticles("#particles-js")
-  }
+  else {
+    if (particles) {
+      particlesToggle.checked = true;
+      addParticles("#particles-js")
+  }}
+  
+  const link = document.createElement('link');
+  link.href = 'styles/styles.css';
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
 });
 
 sendButton.addEventListener("click", () => { sendMessage(); chatInput.innerText = ""; updatePlaceholder() });
 
 chatInput.addEventListener("keydown", (event) => {
+
+  if (!('ontouchstart' in window) || navigator.maxTouchPoints < 1) {
+    if (event.key === "Enter" && !event.ctrlKey) {
+      event.preventDefault();
+      sendMessage();
+      chatInput.innerText = ""; 
+      updatePlaceholder()
+    }
+  }
+  
   if (event.key === "Enter" && event.ctrlKey) {
-    sendMessage();
-    chatInput.innerText = "";
+    chatInput.innerText = chatInput.innerText + "\n"
+    const range = document.createRange();
+    const selection = window.getSelection();
+
+    range.selectNodeContents(chatInput);
+    range.collapse(false);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+    updatePlaceholder();
   }
 });
 
@@ -92,6 +119,7 @@ document.getElementById('yes-button').addEventListener('click', function () {
   updatePlaceholder();
   introCardsContainer.classList.remove("hidden");
   document.getElementById('popup-overlay').classList.add('hidden');
+  document.getElementById('clearchat-popup').classList.add('hidden');
 });
 
 // Toggle Particle Effects
@@ -100,12 +128,19 @@ particlesToggle.addEventListener('change', function () {
     const settings = JSON.parse(localStorage.getItem('setting'))
     settings['particle'] = true
     localStorage.setItem('setting', JSON.stringify(settings));
-    console.log('particles');
+    if (settings['light']) {
+      addParticles('#particle-js', lightParticles)
+    }
+    else {
+      addParticles('#particle-js')
+
+    }
   } else {
     const settings = JSON.parse(localStorage.getItem('setting'))
     settings['particle'] = false
     localStorage.setItem('setting', JSON.stringify(settings));
     particlejs.innerHTML = ''
+    pJSDom = []
   }
 });
 
@@ -115,16 +150,22 @@ themeToggle.addEventListener('change', function () {
     settings['light'] = true
     localStorage.setItem('setting', JSON.stringify(settings));
     applyLightTheme();
+    if (settings['particle']) {
+      addParticles('#particle-js', lightParticles)
+    }
   } else {
     const settings = JSON.parse(localStorage.getItem('setting'))
     settings['light'] = false
     localStorage.setItem('setting', JSON.stringify(settings));
     applyDarkTheme();
+    if (settings['particle']) {
+      addParticles('#particle-js')
+    }
   }
 });
 
 
-document.querySelectorAll('.iconImg').forEach(icon => {
+document.querySelectorAll('.headerIcon').forEach(icon => {
   icon.addEventListener('mousemove', (event) => {
     const dailogText = icon.getAttribute('alt');
     const cords = icon.getBoundingClientRect();
@@ -134,6 +175,7 @@ document.querySelectorAll('.iconImg').forEach(icon => {
     dailog.style.opacity = '0.4';
     dailog.style.visibility = 'visible';
     if (icon.alt != "Settings") {dailog.style.left = cords.right + 'px';}
+    else if (icon.alt == "Send") {icon.removeEventListener('mousemove')}
     else {dailog.style.left = cords.left-dSize.width + 'px';}
     dailog.style.top = cords.bottom + 'px';
   });
@@ -144,13 +186,11 @@ document.querySelectorAll('.iconImg').forEach(icon => {
   });
 });
 
-function addParticles(element, cColor, lColor){
-  document.querySelector(element).innerHtml = ''
-  particlesJS(element, {'particles': 
-    {'color': {'value': cColor}},
-    
-    'line_linked': {'color': lColor,}
-  })}
+function addParticles(element, pColors){
+  particlejs.innerHtml = ''
+  pJSDom = []
+  particlesJS(element, pColors)
+}
 
 function applyLightTheme() {
   const link = document.createElement('link');
@@ -168,7 +208,7 @@ function applyDarkTheme() {
 }
 
 function updatePlaceholder() {
-  if (chatInput.innerText.trim() === '') {
+  if (chatInput.innerText === '') {
     placeholder.style.opacity = '1';
   } else {
     placeholder.style.opacity = '0';
@@ -251,7 +291,11 @@ async function addMessageToChatBox(content, role) {
   }
   messageContainer.appendChild(messageCard);
   chatBox.insertBefore(enhanceCodeBlocks(messageContainer), chatBox.firstChild);
-  await MathJax.typesetPromise(['.message-card'])
+  try {
+    await MathJax.typesetPromise(['.message-card'])
+  } catch (error){
+    console.log("MathJax failed to load "+error)
+  }
 
   chatBox.scrollTo({
     top: chatBox.scrollHeight,

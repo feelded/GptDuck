@@ -7,14 +7,14 @@
 /* v2.0.0
 /* ----------------------------------------------- */
 
-var pJS = function(element, params, canvas_el){
-  console.log(4567)
+var pJS = function(canvas_el, params){
+  
   /* particles.js variables with default values */
   this.pJS = {
     canvas: {
       el: canvas_el,
-      w: canvas_el.offsetWidth,
-      h: canvas_el.offsetHeight
+      w: window.innerWidth,
+      h: window.innerHeight
     },
     particles: {
       number: {
@@ -25,7 +25,7 @@ var pJS = function(element, params, canvas_el){
         }
       },
       color: {
-        value: '#87CEEB'
+        value: '#ff0000'
       },
       shape: {
         type: 'circle',
@@ -60,7 +60,7 @@ var pJS = function(element, params, canvas_el){
       line_linked: {
         enable: true,
         distance: 150,
-        color: '#000',
+        color: '#fff',
         opacity: 0.4,
         width: 1
       },
@@ -118,7 +118,7 @@ var pJS = function(element, params, canvas_el){
       },
       mouse:{}
     },
-    retina_detect: true,
+    retina_detect: false,
     fn: {
       interact: {},
       modes: {},
@@ -158,8 +158,8 @@ var pJS = function(element, params, canvas_el){
       pJS.tmp.retina = false;
     }
 
-    pJS.canvas.w = pJS.canvas.el.offsetWidth * pJS.canvas.pxratio;
-    pJS.canvas.h = pJS.canvas.el.offsetHeight * pJS.canvas.pxratio;
+    pJS.canvas.w = window.innerWidth * pJS.canvas.pxratio;
+    pJS.canvas.h = window.innerHeight * pJS.canvas.pxratio;
 
     pJS.particles.size.value = pJS.tmp.obj.size_value * pJS.canvas.pxratio;
     pJS.particles.size.anim.speed = pJS.tmp.obj.size_anim_speed * pJS.canvas.pxratio;
@@ -181,6 +181,7 @@ var pJS = function(element, params, canvas_el){
     pJS.canvas.ctx = pJS.canvas.el.getContext('2d');
   };
 
+  
   pJS.fn.canvasSize = function(){
 
     pJS.canvas.el.width = pJS.canvas.w;
@@ -189,10 +190,9 @@ var pJS = function(element, params, canvas_el){
     if(pJS && pJS.interactivity.events.resize){
 
       window.addEventListener('resize', function(){
-
-          pJS.canvas.w = pJS.canvas.el.offsetWidth;
-          pJS.canvas.h = pJS.canvas.el.offsetHeight;
-
+          pJS.canvas.w = window.innerWidth;
+          pJS.canvas.h = window.innerHeight;
+          console.log(pJS.canvas.pxratio)
           /* resize canvas */
           if(pJS.tmp.retina){
             pJS.canvas.w *= pJS.canvas.pxratio;
@@ -201,7 +201,7 @@ var pJS = function(element, params, canvas_el){
 
           pJS.canvas.el.width = pJS.canvas.w;
           pJS.canvas.el.height = pJS.canvas.h;
-
+          
           /* repaint canvas on anim disabled */
           if(!pJS.particles.move.enable){
             pJS.fn.particlesEmpty();
@@ -1023,15 +1023,15 @@ var pJS = function(element, params, canvas_el){
     if(pJS.interactivity.events.onhover.enable || pJS.interactivity.events.onclick.enable){
 
       /* el on mousemove */
-      pJS.interactivity.el.addEventListener('mousemove', function(e){
+      window.addEventListener('mousemove', function(e){
 
         if(pJS.interactivity.el == window){
           var pos_x = e.clientX,
               pos_y = e.clientY;
         }
         else{
-          var pos_x = e.offsetX || e.clientX,
-              pos_y = e.offsetY || e.clientY;
+          var pos_x = e.clientX || e.offsetX,
+              pos_y = e.clientY || e.offsetY;
         }
 
         pJS.interactivity.mouse.pos_x = pos_x;
@@ -1225,18 +1225,31 @@ var pJS = function(element, params, canvas_el){
 
 /* ---------- global functions - vendors ------------ */
 
-Object.deepExtend = function(destination, source) {
-  for (var property in source) {
-    if (source[property] && source[property].constructor &&
-     source[property].constructor === Object) {
-      destination[property] = destination[property] || {};
-      arguments.callee(destination[property], source[property]);
-    } else {
-      destination[property] = source[property];
+Object.deepExtend = function (target, source) {
+  for (let key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (source[key] instanceof Object && key in target) {
+        target[key] = Object.deepExtend(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
     }
   }
-  return destination;
-};
+  return target;
+}
+
+// Object.deepExtend = function(destination, source) {
+//   for (var property in source) {
+//     if (source[property] && source[property].constructor &&
+//      source[property].constructor === Object) {
+//       destination[property] = destination[property] || {};
+//       arguments.callee(destination[property], source[property]);
+//     } else {
+//       destination[property] = source[property];
+//     }
+//   }
+//   return destination;
+// };
 
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame ||
@@ -1287,7 +1300,7 @@ function isInArray(value, array) {
 window.pJSDom = [];
 
 window.particlesJS = function(query, params){
-  const element = document.querySelector(query)
+  let element = document.querySelector(query)
   /* no id? set the id to default id */
   if(!element){
     element = document.getElementById("particles-js")
@@ -1322,8 +1335,10 @@ window.particlesJS = function(query, params){
   var canvas = element.appendChild(canvas_el);
   /* launch particle.js */
   if(canvas != null){
-    pJSDom.push(new pJS(element, params, canvas));
+    pJSDom.push(new pJS(canvas, params));
   }
+
+  return pJSDom[0]
 
 };
 
