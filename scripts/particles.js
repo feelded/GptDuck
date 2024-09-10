@@ -192,7 +192,6 @@ var pJS = function(canvas_el, params){
       window.addEventListener('resize', function(){
           pJS.canvas.w = window.innerWidth;
           pJS.canvas.h = window.innerHeight;
-          console.log(pJS.canvas.pxratio)
           /* resize canvas */
           if(pJS.tmp.retina){
             pJS.canvas.w *= pJS.canvas.pxratio;

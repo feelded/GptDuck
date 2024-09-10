@@ -5,9 +5,9 @@ marked.setOptions({
   headerIds: false,
 });
 
-console.log(window.navigator.platform)
+// console.log(window.navigator.platform)
 
-const apiUrl = "https://duckgpt.iriszarox.workers.dev/chat/";
+const apiUrl = "https://duckgpt.iriszarox.kers.dev/chat/";
 const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
 const placeholder = document.getElementById("placeholder");
@@ -22,12 +22,17 @@ const particlejs = document.getElementById('particles-js');
 const lightParticles = {"particles": {"color": {"value": "#87CEEB"},"line_linked": {"color": "#000000",},}}
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (navigator.userAgent.indexOf("Firefox") != -1) {
+  chatBox.style.scrollbarWidth = "thin";
+  chatBox.style.scrollbarColor = "rgba(255, 255, 255, 0.2) rgba(222, 221, 219, 0)";
+  }
   loadMessages();
 
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
   if (history.length == 0) {
     introCardsContainer.classList.remove("hidden");
   }
+
   chatBox.scrollTo({
     top: chatBox.scrollHeight,
     behavior: 'smooth'
@@ -64,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 sendButton.addEventListener("click", () => { sendMessage(); chatInput.innerText = ""; updatePlaceholder() });
 
 chatInput.addEventListener("keydown", (event) => {
-
+  
   if (!('ontouchstart' in window) || navigator.maxTouchPoints < 1) {
     if (event.key === "Enter" && !event.ctrlKey) {
       event.preventDefault();
@@ -74,6 +79,10 @@ chatInput.addEventListener("keydown", (event) => {
     }
   }
   
+  if (chatInput.innerText == "\n") {
+    updatePlaceholder()
+  }
+
   if (event.key === "Enter" && event.ctrlKey) {
     chatInput.innerText = chatInput.innerText + "\n"
     const range = document.createRange();
@@ -86,6 +95,7 @@ chatInput.addEventListener("keydown", (event) => {
     selection.addRange(range);
     updatePlaceholder();
   }
+
 });
 
 chatInput.addEventListener('input', updatePlaceholder);
@@ -122,7 +132,7 @@ document.getElementById('yes-button').addEventListener('click', function () {
   document.getElementById('clearchat-popup').classList.add('hidden');
 });
 
-// Toggle Particle Effects
+
 particlesToggle.addEventListener('change', function () {
   if (this.checked) {
     const settings = JSON.parse(localStorage.getItem('setting'))
@@ -183,8 +193,11 @@ document.querySelectorAll('.headerIcon').forEach(icon => {
   icon.addEventListener('mouseleave', () => {
     dailog.style.opacity = '0';
     dailog.style.visibility = 'hidden';
+    dailog.style.top = "0";
+    dailog.style.left = "0";
   });
 });
+
 
 function addParticles(element, pColors){
   particlejs.innerHtml = ''
@@ -239,7 +252,7 @@ function enhanceCodeBlocks(element) {
     const copyButton = document.createElement("button");
     copyButton.innerText = "📋 Copy";
     codeHeader.appendChild(copyButton);
-
+    block.innerHtml
     pre.insertBefore(codeHeader, pre.firstChild);
     copyButton.addEventListener("click", () => {
       copyToClipboard(block.innerText);
@@ -274,11 +287,14 @@ function hideIntroCards() {
   introCardsContainer.classList.add("hidden");
 }
 
-async function addMessageToChatBox(content, role) {
+async function addMessageToChatBox(content, role, error=false) {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message-container");
   const messageCard = document.createElement("div");
   messageCard.classList.add("message-card", role);
+  if (error) {
+  messageCard.style.color = "#ff0000"
+  }
   if (role === "api") {
     const profilePic = document.createElement("div");
     profilePic.classList.add("profile-pic");
@@ -311,8 +327,19 @@ function loadingResponse() {
   const profilePic = document.createElement("div");
   profilePic.classList.add("profile-pic");
   messageContainer.appendChild(profilePic);
+  const messageCard = document.createElement("div");
+  messageCard.classList.add("message-card", "api");
+  // const loading = document.createElement("div");
+  // loading.classList.add("loading");
+  // messageCard.appendChild(loading)
+  messageCard.innerText = ". . ." 
+  messageContainer.appendChild(messageCard);
 
   chatBox.insertBefore(messageContainer, chatBox.firstChild);
+  chatBox.scrollTo({
+    top: chatBox.scrollHeight,
+    behavior: 'smooth'
+  });
   return messageContainer;
 }
 
@@ -354,9 +381,15 @@ async function sendMessage() {
       saveMessage(responseText, "api");
     } else {
       console.error("API error:", data);
+      loading.remove();
+      addMessageToChatBox("Oops! Something went wrong while retrieving the response. Please try again.", "api", error=true);
+      saveMessage("Oops! Something went wrong while retrieving the response. Please try again.", "api");
     }
   } catch (error) {
     console.error("Fetch error:", error);
+      loading.remove();
+      addMessageToChatBox("Oops! Something went wrong while retrieving the response. Please try again.", "api", error=true);
+      saveMessage("Oops! Something went wrong while retrieving the response. Please try again.", "api");
   }
 }
 

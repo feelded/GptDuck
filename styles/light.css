@@ -4,6 +4,10 @@ body, html {
     background: linear-gradient(135deg, #ffffff, #a4a4a4) !important ;
 }
 
+a {
+    color: #2965ff !important;
+}
+
 .iconImg {
     filter: invert() !important ;
 }
@@ -17,7 +21,7 @@ body, html {
     filter: invert() !important ;
 }
 
-.card-1 {
+/* .card-1 {
     background-color: rgba(135, 140, 150, 0.2) !important ; 
 }
 
@@ -27,7 +31,7 @@ body, html {
 
 .card-3 {
     background-color: rgba(205, 182, 193, 0.2) !important ; 
-}
+} */
 
 #dailog {
     background-color: #333 !important ;

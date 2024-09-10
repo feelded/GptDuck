@@ -7,6 +7,15 @@
     --lBlack: #1e1e1e;
 }
 
+::-webkit-scrollbar {
+    height: 4px;
+    width: 3px !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 * {
     /* margin: 0;
     padding: 0;
@@ -40,7 +49,7 @@ p {
 
 a {
     text-decoration: none;
-    color: #f7a840;
+    color: #f71f1f;
     cursor: pointer;
 }
 
@@ -86,11 +95,9 @@ canvas {
     border-radius: 8px;
     padding: 30px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.15); 
     border: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 .intro-card img {
@@ -110,7 +117,7 @@ canvas {
 }
 
 
-.card-1 {
+/* .card-1 {
     background-color: rgba(135, 140, 150, 0.2); 
 }
 
@@ -120,7 +127,7 @@ canvas {
 
 .card-3 {
     background-color: rgba(205, 182, 193, 0.2); 
-}
+} */
 
 
 .header {
@@ -186,6 +193,7 @@ canvas {
 
 #popup-content {
     /* background: #00000080; */
+    border: 1px solid #6c6c6c;
     padding: 30px;
     border-radius: 8px;
     position: relative;
@@ -293,15 +301,17 @@ input:checked + .slider:before {
     flex-direction: column-reverse;
 }
 
-#spaceChatBox {
-    margin-bottom: 20vh;
-}
-
 .message-container {
     display: flex;
     align-items: flex-start;
     margin-bottom: 10px;
     z-index: 3;
+}
+
+#spaceChatBox {
+    width: 100%;
+    min-height: 70%;
+    border: 0.5 solid #e1e1e1;
 }
 
 .message-container.user {
@@ -363,19 +373,19 @@ pre > code {
     display: block;
     background-color: none !important;
     overflow-x: auto; 
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-all;
+    white-space: pre-wrap !important;
+    word-wrap: normal !important;
+    overflow-wrap: normal !important;
+    word-break: keep-all !important;
 }
 
 pre > code * {
     font-family: "Courier New", Courier, monospace !important;
     display: inline; 
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-all;
+    white-space: pre-wrap !important;
+    word-wrap: normal !important;
+    overflow-wrap: normal !important;
+    word-break: keep-all !important; 
 }
 
 .code-header {
@@ -482,7 +492,7 @@ pre > code * {
 }
 
 #chat-input {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
     color: white;
     flex-grow: 1;
     padding: 10px;
@@ -510,13 +520,13 @@ pre > code * {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
     display: flex;
 }
 
 #send-button img {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     align-self: flex-end;
     
 }
@@ -531,14 +541,7 @@ pre > code * {
     to { transform: translateY(0); opacity: 1; }
 }
 
-::-webkit-scrollbar {
-    height: 4px;
-    width: 3px;
-}
 
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-}
 
 
 @media (max-width: 768px) {
@@ -554,7 +557,7 @@ pre > code * {
     }
     .input-container {
         width: 100%;
-        padding-bottom: 1px;
+        padding-bottom: 5px;
     }
     #chat-input {
         overflow-wrap: break-word;
@@ -568,7 +571,7 @@ pre > code * {
 
 @media (max-width:477px) {
     .input-container {
-        width: 95%;
+        width: 100%;
     }
 
     .intro-card {
