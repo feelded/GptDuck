@@ -7,7 +7,7 @@ marked.setOptions({
 
 // console.log(window.navigator.platform)
 
-const apiUrl = "https://duckgpt.iriszarox.kers.dev/chat/";
+const apiUrl = "https://duckgpt.iriszarox.workers.dev/chat/";
 const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
 const placeholder = document.getElementById("placeholder");
