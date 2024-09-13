@@ -7,13 +7,30 @@
     --lBlack: #1e1e1e;
 }
 
+
+
 ::-webkit-scrollbar {
-    height: 4px;
-    width: 3px !important;
+    width: 3px;
+    height: 3px;
+}
+
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f0c1900;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00000088;
 }
 
 * {
@@ -53,6 +70,10 @@ a {
     cursor: pointer;
 }
 
+a:hover {
+    opacity: 0.8;
+}
+
 #particles-js {
     display: block;
     position: fixed;
@@ -63,7 +84,6 @@ a {
 
 canvas {
     display: block;
-    /* vertical-align: bottom; */
 }
 
 .intro-cards {
@@ -115,20 +135,6 @@ canvas {
     transform: translateY(-5px);
     backdrop-filter: blur(9=4px);
 }
-
-
-/* .card-1 {
-    background-color: rgba(135, 140, 150, 0.2); 
-}
-
-.card-2 {
-    background-color: rgba(144, 166, 144, 0.2); 
-}
-
-.card-3 {
-    background-color: rgba(205, 182, 193, 0.2); 
-} */
-
 
 .header {
     padding: 10px;
@@ -299,6 +305,7 @@ input:checked + .slider:before {
     padding: 0 10%;
     display: flex;
     flex-direction: column-reverse;
+    z-index: 2;
 }
 
 .message-container {
@@ -310,7 +317,7 @@ input:checked + .slider:before {
 
 #spaceChatBox {
     width: 100%;
-    min-height: 70%;
+    min-height: 10%;
     border: 0.5 solid #e1e1e1;
 }
 
@@ -327,7 +334,6 @@ input:checked + .slider:before {
     padding: 20px;
     margin-bottom: 10px;
     animation: slideUp 0.5s ease-out;
-    /* word-wrap: break-word; */
 }
 
 .message-card.user {
@@ -339,6 +345,11 @@ input:checked + .slider:before {
 .message-card.api {
     background: rgba(100, 100, 255, 0);
     align-self: flex-start;
+    overflow: hidden;
+}
+
+.errorResponse {
+    color: #ff0000;
 }
 
 .profile-pic {
@@ -373,19 +384,11 @@ pre > code {
     display: block;
     background-color: none !important;
     overflow-x: auto; 
-    white-space: pre-wrap !important;
-    word-wrap: normal !important;
-    overflow-wrap: normal !important;
-    word-break: keep-all !important;
 }
 
 pre > code * {
     font-family: "Courier New", Courier, monospace !important;
     display: inline; 
-    white-space: pre-wrap !important;
-    word-wrap: normal !important;
-    overflow-wrap: normal !important;
-    word-break: keep-all !important; 
 }
 
 .code-header {
@@ -415,12 +418,12 @@ pre > code * {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: #6272a4; /* Soft blue-gray for comments */
+    color: #6272a4; 
     font-style: italic;
 }
 
 .token.punctuation {
-    color: #f8f8f2; /* Normal white */
+    color: #f8f8f2; 
 }
 
 .token.property,
@@ -428,12 +431,12 @@ pre > code * {
 .token.constant,
 .token.symbol,
 .token.deleted {
-    color: #ff5555; /* Vibrant red */
+    color: #ff5555; 
 }
 
 .token.boolean,
 .token.number {
-    color: #bd93f9; /* Light purple */
+    color: #bd93f9; 
 }
 
 .token.selector,
@@ -442,29 +445,29 @@ pre > code * {
 .token.char,
 .token.builtin,
 .token.inserted {
-    color: #50fa7b; /* Bright green */
+    color: #50fa7b;
 }
 
 .token.operator,
 .token.entity,
 .token.url,
 .token.variable {
-    color: #f1fa8c; /* Bright yellow */
+    color: #f1fa8c; 
 }
 
 .token.atrule,
 .token.keyword {
-    color: #ff79c6; /* Pink */
+    color: #ff79c6; 
 }
 
 .token.function,
 .token.class-name {
-    color: #8be9fd; /* Cyan */
+    color: #8be9fd; 
 }
 
 .token.regex,
 .token.important {
-    color: #ffb86c; /* Orange */
+    color: #ffb86c; 
 }
 
 .token.important,
@@ -551,10 +554,6 @@ pre > code * {
     .chat-box {
         padding: 0 2%;
     }
-    .message-card{
-        overflow-wrap: break-word;
-        /* word-break: break-all; */
-    }
     .input-container {
         width: 100%;
         padding-bottom: 5px;
@@ -562,6 +561,10 @@ pre > code * {
     #chat-input {
         overflow-wrap: break-word;
         word-break: break-all;
+        margin-left: 5px;
+    }
+    #placeholder {
+        left: 25px;
     }
     #send-button{
         padding: 0;

@@ -21,18 +21,6 @@ a {
     filter: invert() !important ;
 }
 
-/* .card-1 {
-    background-color: rgba(135, 140, 150, 0.2) !important ; 
-}
-
-.card-2 {
-    background-color: rgba(144, 166, 144, 0.2) !important ; 
-}
-
-.card-3 {
-    background-color: rgba(205, 182, 193, 0.2) !important ; 
-} */
-
 #dailog {
     background-color: #333 !important ;
     color: #000000 !important ;
@@ -80,5 +68,14 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.6) !important;
 }
+
+/* webkit in loading screen -----
+old send button pad 5px ----
+scroll button click and scroll ----
+error message thingy ----
+
+android 
+loading in center ----
+either word break in code or scroll bar in code block ----*/

@@ -10,6 +10,7 @@ marked.setOptions({
 const apiUrl = "https://duckgpt.iriszarox.workers.dev/chat/";
 const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
+var query = false
 const placeholder = document.getElementById("placeholder");
 const sendButton = document.getElementById("send-button");
 const dailog = document.getElementById('dailog');
@@ -22,13 +23,22 @@ const particlejs = document.getElementById('particles-js');
 const lightParticles = {"particles": {"color": {"value": "#87CEEB"},"line_linked": {"color": "#000000",},}}
 
 document.addEventListener("DOMContentLoaded", () => {
+  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
+  if (localStorage.getItem("setting") === null) {
+    localStorage.setItem("setting", JSON.stringify({ "particle": true, "light": false }));
+  };
+  const settings = JSON.parse(localStorage.getItem("setting"))
+  const particles = settings['particle'];
+  const light = settings['light']
+  
+  
   if (navigator.userAgent.indexOf("Firefox") != -1) {
-  chatBox.style.scrollbarWidth = "thin";
-  chatBox.style.scrollbarColor = "rgba(255, 255, 255, 0.2) rgba(222, 221, 219, 0)";
+    chatBox.style.scrollbarWidth = "thin";
+    chatBox.style.scrollbarColor = "rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0)";
+    if (light) {chatBox.style.scrollbarColor = "rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0)";}
   }
   loadMessages();
 
-  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
   if (history.length == 0) {
     introCardsContainer.classList.remove("hidden");
   }
@@ -37,14 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
     top: chatBox.scrollHeight,
     behavior: 'smooth'
   });
-
-  let settings = localStorage.getItem("setting")
-  if (settings === null) {
-    localStorage.setItem("setting", JSON.stringify({ "particle": true, "light": false }));
-  };
-  settings = JSON.parse(localStorage.getItem("setting"))
-  const particles = settings['particle'];
-  const light = settings['light']
 
   if (light) {
     themeToggle.checked = true;
@@ -66,21 +68,29 @@ document.addEventListener("DOMContentLoaded", () => {
   document.head.appendChild(link);
 });
 
-sendButton.addEventListener("click", () => { sendMessage(); chatInput.innerText = ""; updatePlaceholder() });
+sendButton.addEventListener("click", () => { 
+  if (!query) {
+    sendMessage();
+    chatInput.innerText = "";
+    updatePlaceholder();
+  } 
+});
 
 chatInput.addEventListener("keydown", (event) => {
   
   if (!('ontouchstart' in window) || navigator.maxTouchPoints < 1) {
     if (event.key === "Enter" && !event.ctrlKey) {
       event.preventDefault();
-      sendMessage();
-      chatInput.innerText = ""; 
-      updatePlaceholder()
+      if (!query) {
+        sendMessage();
+        chatInput.innerText = ""; 
+        updatePlaceholder();
+      }
     }
   }
   
   if (chatInput.innerText == "\n") {
-    updatePlaceholder()
+    updatePlaceholder();
   }
 
   if (event.key === "Enter" && event.ctrlKey) {
@@ -278,9 +288,8 @@ function copyToClipboard(text) {
 async function loadMessages() {
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
   for (const message of history) {
-    await addMessageToChatBox(message.content, message.role);
+    await addMessageToChatBox(message.content, message.role, message.error);
   }
-
 }
 
 function hideIntroCards() {
@@ -292,10 +301,10 @@ async function addMessageToChatBox(content, role, error=false) {
   messageContainer.classList.add("message-container");
   const messageCard = document.createElement("div");
   messageCard.classList.add("message-card", role);
-  if (error) {
-  messageCard.style.color = "#ff0000"
-  }
   if (role === "api") {
+    if (error) {
+    messageCard.classList.add("errorResponse")
+    }
     const profilePic = document.createElement("div");
     profilePic.classList.add("profile-pic");
     messageContainer.appendChild(profilePic);
@@ -344,8 +353,10 @@ function loadingResponse() {
 }
 
 async function sendMessage() {
+  query = true
   const prompt = chatInput.innerText.trim();
   if (!prompt) {
+    query = false
     return
   };
 
@@ -357,44 +368,48 @@ async function sendMessage() {
   const loading = loadingResponse();
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
   const model = "gpt-4o-mini";
-  const userHistory = history.filter((message) => message.role === "user");
+  const userHistory = history.filter((message) => (message.role === "user" && !message.error));
 
   const params = new URLSearchParams({
     prompt: prompt,
     model: model,
     history: JSON.stringify(userHistory),
   });
-
+  const errorText = "Oops! Something went wrong while retrieving the response. Please try again."
+  
   try {
     const response = await fetch(`${apiUrl}?${params.toString()}`);
-    saveMessage(prompt, "user");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-
+    
     const data = await response.json();
 
     if (data.status === 200) {
+      saveMessage(prompt, "user");
       const responseText = data.response;
       loading.remove();
       addMessageToChatBox(responseText, "api");
       saveMessage(responseText, "api");
     } else {
+      saveMessage(prompt, "user", true);
       console.error("API error:", data);
       loading.remove();
-      addMessageToChatBox("Oops! Something went wrong while retrieving the response. Please try again.", "api", error=true);
-      saveMessage("Oops! Something went wrong while retrieving the response. Please try again.", "api");
+      addMessageToChatBox(errorText, "api", true);
+      saveMessage(errorText, "api", true);
     }
-  } catch (error) {
-    console.error("Fetch error:", error);
+  } catch (errorTry) {
+    saveMessage(prompt, "user", true);
+    console.error("Fetch error:", errorTry);
       loading.remove();
-      addMessageToChatBox("Oops! Something went wrong while retrieving the response. Please try again.", "api", error=true);
-      saveMessage("Oops! Something went wrong while retrieving the response. Please try again.", "api");
+      addMessageToChatBox(errorText, "api", true);
+      saveMessage(errorText, "api", true);
   }
+  query = false
 }
 
-function saveMessage(content, role) {
+function saveMessage(content, role, error=false) {
   const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
-  history.push({ role: role, content: content });
+  history.push({ role: role, content: content, error: error});
   sessionStorage.setItem("chatHistory", JSON.stringify(history));
 }
