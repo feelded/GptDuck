@@ -10,8 +10,8 @@
 
 
 ::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
+    width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-button {
@@ -25,12 +25,12 @@
 
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
+    border-radius: 2px;
     transition: all 0.2s ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #00000088;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -53,6 +53,7 @@ body, html {
     font-family: 'Poppins', sans-serif; 
     color: var(--lWhite);
     background: linear-gradient(135deg, #2b2b2b, #121212);
+    overflow: visible;
 }
 
 
@@ -137,7 +138,7 @@ canvas {
 }
 
 .header {
-    padding: 10px;
+    margin: 10px;
     display: flex;
     justify-content: space-between;
     position: fixed ;
@@ -531,7 +532,7 @@ pre > code * {
     width: 28px;
     height: 28px;
     align-self: flex-end;
-    
+    padding: 5px;
 }
 
 

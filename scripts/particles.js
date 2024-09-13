@@ -81,7 +81,7 @@ var pJS = function(canvas_el, params){
       array: []
     },
     interactivity: {
-      detect_on: 'canvas',
+      detect_on: 'window',
       events: {
         onhover: {
           enable: true,
@@ -89,7 +89,7 @@ var pJS = function(canvas_el, params){
         },
         onclick: {
           enable: false,
-          mode: 'push'
+          mode: 'repulse'
         },
         resize: true
       },
@@ -1022,7 +1022,7 @@ var pJS = function(canvas_el, params){
     if(pJS.interactivity.events.onhover.enable || pJS.interactivity.events.onclick.enable){
 
       /* el on mousemove */
-      window.addEventListener('mousemove', function(e){
+      pJS.interactivity.el.addEventListener('mousemove', function(e){
 
         if(pJS.interactivity.el == window){
           var pos_x = e.clientX,

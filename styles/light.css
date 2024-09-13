@@ -71,11 +71,6 @@ code {
     background: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* webkit in loading screen -----
-old send button pad 5px ----
-scroll button click and scroll ----
-error message thingy ----
-
-android 
-loading in center ----
-either word break in code or scroll bar in code block ----*/
+/* 
+horizontal scroll height fix
+*/

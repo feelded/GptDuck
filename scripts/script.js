@@ -23,7 +23,7 @@ const particlejs = document.getElementById('particles-js');
 const lightParticles = {"particles": {"color": {"value": "#87CEEB"},"line_linked": {"color": "#000000",},}}
 
 document.addEventListener("DOMContentLoaded", () => {
-  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
+  const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
   if (localStorage.getItem("setting") === null) {
     localStorage.setItem("setting", JSON.stringify({ "particle": true, "light": false }));
   };
@@ -33,8 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
   if (navigator.userAgent.indexOf("Firefox") != -1) {
-    chatBox.style.scrollbarWidth = "thin";
+    const style = document.createElement('style');
+    style.textContent = '* { scrollbar-width: thin; }';
+    document.head.appendChild(style);
     chatBox.style.scrollbarColor = "rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0)";
+    document.get
     if (light) {chatBox.style.scrollbarColor = "rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0)";}
   }
   loadMessages();
@@ -134,7 +137,7 @@ document.getElementById('no-button').addEventListener('click', function () {
 });
 
 document.getElementById('yes-button').addEventListener('click', function () {
-  sessionStorage.clear();
+  localStorage.removeItem("chatHistory");
   chatBox.innerHTML = "";
   updatePlaceholder();
   introCardsContainer.classList.remove("hidden");
@@ -271,7 +274,11 @@ function enhanceCodeBlocks(element) {
         copyButton.textContent = "📋 Copy";
       }, 2000);
     });
-    Prism.highlightElement(pre.querySelector("code"));
+    try {
+      Prism.highlightElement(pre.querySelector("code"));
+    } catch (error){
+      console.log("Prism failed to load, Reloading page may fix the error. "+error)
+    }
   });
   return element
 }
@@ -286,7 +293,7 @@ function copyToClipboard(text) {
 }
 
 async function loadMessages() {
-  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
+  const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
   for (const message of history) {
     await addMessageToChatBox(message.content, message.role, message.error);
   }
@@ -319,7 +326,7 @@ async function addMessageToChatBox(content, role, error=false) {
   try {
     await MathJax.typesetPromise(['.message-card'])
   } catch (error){
-    console.log("MathJax failed to load "+error)
+    console.log("MathJax failed to load, Reloading page may fix the error. "+error)
   }
 
   chatBox.scrollTo({
@@ -366,7 +373,7 @@ async function sendMessage() {
   hideIntroCards();
 
   const loading = loadingResponse();
-  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
+  const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
   const model = "gpt-4o-mini";
   const userHistory = history.filter((message) => (message.role === "user" && !message.error));
 
@@ -409,7 +416,7 @@ async function sendMessage() {
 }
 
 function saveMessage(content, role, error=false) {
-  const history = JSON.parse(sessionStorage.getItem("chatHistory") || "[]");
+  const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
   history.push({ role: role, content: content, error: error});
-  sessionStorage.setItem("chatHistory", JSON.stringify(history));
+  localStorage.setItem("chatHistory", JSON.stringify(history));
 }
