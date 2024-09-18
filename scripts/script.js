@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }}
   
   const link = document.createElement('link');
-  link.href = 'styles/styles.css';
+  link.href = 'https://feelded.github.io/duckgpt/styles/styles.css';
   link.rel = 'stylesheet';
   document.head.appendChild(link);
 });
@@ -220,7 +220,7 @@ function addParticles(element, pColors){
 
 function applyLightTheme() {
   const link = document.createElement('link');
-  link.href = 'styles/light.css'; 
+  link.href = 'https://feelded.github.io/duckgpt/styles/light.css'; 
   link.rel = 'stylesheet';
   link.id = 'lightThemeCss';
   document.head.appendChild(link);
